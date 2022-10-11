@@ -3,6 +3,7 @@ using AuthFuncsMQ.Consumer.Interface;
 using Azure.Communication.Email;
 using Azure.Communication.Email.Models;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,16 @@ namespace AuthFuncsMQ.Consumer.Service
     {
         private EmailClient emailClient;
 
-        public EmailService()
+        public EmailService(IConfiguration configuration)
         {
-            //emailClient = new EmailClient(connectionString);
+            var connectionString = configuration["CommunicationServiceConnectionString"];
+            emailClient = new EmailClient(connectionString);
         }
 
         public async Task MessageHandler(ProcessMessageEventArgs args)
         {
             var body = args.Message.Body.ToString();
-            Console.WriteLine($"Received: {body}");
+            Console.WriteLine($"Received {args.Identifier}: {body}");
 
             var request = JsonSerializer.Deserialize<EmailServiceRequest>(body);
 
@@ -37,8 +39,10 @@ namespace AuthFuncsMQ.Consumer.Service
                 if (emailMessage != null)
                 {
                     await emailClient.SendAsync(emailMessage);
+                    Console.WriteLine($"Sent email {request.ActionName} to {request.Recipient}");
 
                     await args.CompleteMessageAsync(args.Message);
+                    Console.WriteLine($"Confirmed message: {args.Identifier}");
                 }
             }
         }

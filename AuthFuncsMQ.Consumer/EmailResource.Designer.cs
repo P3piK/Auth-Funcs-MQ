@@ -61,7 +61,23 @@ namespace AuthFuncsMQ.Consumer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///  &lt;head&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;
+        ///    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+        ///    &lt;title&gt;Simple Transactional Email&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///      /* -------------------------------------
+        ///          GLOBAL RESETS
+        ///      ------------------------------------- */
+        ///      
+        ///      /*All the styling goes here*/
+        ///      
+        ///      img {
+        ///        border: none;
+        ///        -ms-interpolation-mode: bicubic;
+        ///        max-w [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ResetPasswordEmailBody {
             get {
@@ -70,7 +86,7 @@ namespace AuthFuncsMQ.Consumer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to no-reply@9118815e-0102-4044-a404-b2fa6f97ee7a.azurecomm.net.
         /// </summary>
         internal static string ResetPasswordEmailSender {
             get {
@@ -79,7 +95,7 @@ namespace AuthFuncsMQ.Consumer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Reset Password @AuthFuncs.
         /// </summary>
         internal static string ResetPasswordEmailSubject {
             get {
