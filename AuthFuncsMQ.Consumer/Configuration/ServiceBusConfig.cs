@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -9,7 +10,13 @@ namespace AuthFuncsMQ.Consumer.Configuration
 {
     public class ServiceBusConfig
     {
-        public string ConnectionString { get; set; }
-        public string QueueName { get; set; }
+        public ServiceBusConfig(IConfiguration configuration)
+        {
+            ConnectionString = configuration["BusServiceConnectionString"];
+            QueueName = configuration["BusServiceQueueName"];
+        }
+
+        public string ConnectionString { get; }
+        public string QueueName { get; }
     }
 }

@@ -2,6 +2,7 @@
 using AuthFuncsMQ.Consumer.Interface;
 using Azure.Core;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AuthFuncsMQ.Consumer
 {
-    public class EmailServiceBusProcessor
+    public class EmailServiceBusProcessor : BackgroundService
     {
         #region Fields
 
@@ -36,35 +37,30 @@ namespace AuthFuncsMQ.Consumer
 
         #endregion
 
-        public async Task RunAsync()
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            // The Service Bus client types are safe to cache and use as a singleton for the lifetime
-            // of the application, which is best practice when messages are being published or read
-            // regularly.
-            //
-            // set the transport type to AmqpWebSockets so that the ServiceBusClient uses the port 443. 
-            // If you use the default AmqpTcp, you will need to make sure that the ports 5671 and 5672 are open
+            Console.WriteLine("\nStarting the receiver...");
 
-            try
-            {
-                processor.ProcessMessageAsync += EmailService.MessageHandler;
-                processor.ProcessErrorAsync += EmailService.ErrorHandler;
+            processor.ProcessMessageAsync += EmailService.MessageHandler;
+            processor.ProcessErrorAsync += EmailService.ErrorHandler;
 
-                await processor.StartProcessingAsync();
+            await processor.StartProcessingAsync();
 
-                Console.WriteLine("Wait for a minute and then press any key to end the processing");
-                Console.ReadKey();
+            Console.WriteLine("Receiving messages started!");
+        }
 
-                // stop processing 
-                Console.WriteLine("\nStopping the receiver...");
-                await processor.StopProcessingAsync();
-                Console.WriteLine("Stopped receiving messages");
-            }
-            finally
-            {
-                await processor.DisposeAsync();
-                await client.DisposeAsync();
-            }
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            Console.WriteLine("\nStopping the receiver...");
+
+            await processor.StopProcessingAsync();
+
+            Console.WriteLine("Stopped receiving messages");
+
+            await processor.DisposeAsync();
+            await client.DisposeAsync();
+
+            await base.StopAsync(cancellationToken);
         }
     }
 }
